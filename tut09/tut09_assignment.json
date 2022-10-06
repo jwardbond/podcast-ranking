@@ -1,0 +1,38 @@
+{
+    "1": {
+        "week": 6,
+        "preference": 9.0
+    },
+    "2": {
+        "week": 8,
+        "preference": 8.0
+    },
+    "3": {
+        "week": 12,
+        "preference": 7.0
+    },
+    "4": {
+        "week": 4,
+        "preference": 8.0
+    },
+    "5": {
+        "week": 7,
+        "preference": 9.0
+    },
+    "6": {
+        "week": 5,
+        "preference": 8.0
+    },
+    "7": {
+        "week": 11,
+        "preference": 7.0
+    },
+    "8": {
+        "week": 9,
+        "preference": 9.0
+    },
+    "9": {
+        "week": 10,
+        "preference": 9.0
+    }
+}
