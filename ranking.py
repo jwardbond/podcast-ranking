@@ -5,11 +5,12 @@ import json
 
 def optimize():
     ##Data
-    section = 'tut09'
+    section = 'tut09' #<- Change this 
     W = np.genfromtxt('{t}/{t}_ranking.csv'.format(t=section), delimiter=',')
     W = np.transpose(W)
     groups = range(len(W))
     weeks = range(len(W[0]))
+    max_rank = len(weeks)
 
     ##Model
     m = gp.Model()
@@ -22,9 +23,9 @@ def optimize():
     m.addConstrs(gp.quicksum(x[i,j] for i in groups) <= 1 for j in weeks) #each week can have at most one group scheduled
     m.addConstrs(gp.quicksum(x[i,j] for j in weeks) == 1 for i in groups) #each group must be assigned to a single week
 
-    for i, group_ranking in enumerate(W): #If any group is guaranteed a date, add that as a hard constraint
-        if sum(group_ranking) == 9: 
-            m.addConstr(gp.quicksum(x[i,j] * W[i,j] for j in weeks) == 9)
+    for i, group_ranking in enumerate(W): #If any group is guaranteed a date, add this as a hard constraint
+        if sum(group_ranking) == max_rank: 
+            m.addConstr(gp.quicksum(x[i,j] * W[i,j] for j in weeks) == max_rank)
 
     #Output
     m.write('output.lp')
