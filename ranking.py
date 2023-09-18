@@ -23,7 +23,7 @@ def optimize():
     m.addConstrs(gp.quicksum(x[i,j] for i in groups) <= 1 for j in weeks) #each week can have at most one group scheduled
     m.addConstrs(gp.quicksum(x[i,j] for j in weeks) == 1 for i in groups) #each group must be assigned to a single week
 
-    for i, group_ranking in enumerate(W): #If any group is guaranteed a date, add this as a hard constraint
+    for i, group_ranking in enumerate(W): #if any group is guaranteed a date, add this as a hard constraint
         if sum(group_ranking) == max_rank: 
             m.addConstr(gp.quicksum(x[i,j] * W[i,j] for j in weeks) == max_rank)
 
