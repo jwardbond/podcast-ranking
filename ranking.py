@@ -1,15 +1,20 @@
+import argparse
+import json
+from pathlib import Path
+
 import numpy as np
 import gurobipy as gp
 from gurobipy import GRB
-import json
 
-def optimize():
+
+def optimize(filepath):
     ##Data
-    section = 'tut09' #<- Change this 
-    W = np.genfromtxt('{t}/{t}_ranking.csv'.format(t=section), delimiter=',')
-    W = np.transpose(W)
+    filepath = Path(filepath)
+    W = np.genfromtxt(filepath, delimiter=',')
+    # W = np.transpose(W)
     groups = range(len(W))
     weeks = range(len(W[0]))
+    print(weeks)
     max_rank = len(weeks)
 
     ##Model
@@ -28,7 +33,7 @@ def optimize():
             m.addConstr(gp.quicksum(x[i,j] * W[i,j] for j in weeks) == max_rank)
 
     #Output
-    m.write('output.lp')
+    m.write(str(filepath.parents[0] / 'output.lp'))
 
     m.optimize()
 
@@ -36,16 +41,21 @@ def optimize():
     for i in groups: 
         for j in weeks: 
             if x[i,j].x >= 0.1:
-                solution_dict[i+1]['week'] = j+4
+                solution_dict[i+1]['week'] = j+1
                 solution_dict[i+1]['preference'] = W[i,j]
 
-    with open('{t}/{t}_assignment.json'.format(t=section), "w") as outfile:
+    with open(filepath.parent / 'assignment.json', "w") as outfile:
         json.dump(solution_dict, outfile)
     
     print(solution_dict)
                 
 
-
-
 if __name__ == '__main__':
-    optimize()
+    parser = argparse.ArgumentParser(
+        prog='rank-matching',
+        description='Calculates a maximum weight matching for data in a ranking.csv file')
+    
+    parser.add_argument('filepath')
+    args=parser.parse_args()
+
+    optimize(args.filepath)
